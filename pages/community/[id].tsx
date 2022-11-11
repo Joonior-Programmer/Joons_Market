@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Layout from "../../components/layout";
+import Button from "../../components/button";
+import Textarea from "../../components/textarea";
 
 const CommunityPostDetail: NextPage = () => {
   return (
     <Layout canGoBack>
-      <div>
+      <div className="pt-10">
         <span className="inline-flex my-3 ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
           동네질문
         </span>
@@ -79,14 +81,9 @@ const CommunityPostDetail: NextPage = () => {
         ))}
 
         <div className="px-4 mb-4">
-          <textarea
-            className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500 "
-            rows={4}
-            placeholder="Answer this question!"
-          />
-          <button className="w-full mt-3 bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all">
-            Reply
-          </button>
+          <Textarea placeholder="Answer this question!"></Textarea>
+
+          <Button text="Reply" />
         </div>
       </div>
     </Layout>
