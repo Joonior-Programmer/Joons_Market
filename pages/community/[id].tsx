@@ -2,6 +2,9 @@ import type { NextPage } from "next";
 import Layout from "../../components/layout";
 import Button from "../../components/button";
 import Textarea from "../../components/textarea";
+import Profile from "../../components/profile";
+import Comment from "../../components/comment";
+import Link from "next/link";
 
 const CommunityPostDetail: NextPage = () => {
   return (
@@ -10,15 +13,27 @@ const CommunityPostDetail: NextPage = () => {
         <span className="inline-flex my-3 ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
           동네질문
         </span>
-        <div className="flex mb-3 px-4 cursor-pointer pb-3  border-b items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-slate-300" />
-          <div>
-            <p className="text-sm font-medium text-gray-700">Joon</p>
-            <p className="text-xs font-medium text-gray-500">
-              View profile &rarr;
-            </p>
-          </div>
+
+        {/* Profile */}
+
+        <div className="px-4 border-b-[1px]">
+          <Profile
+            nickname="Joon"
+            fontType="medium"
+            textSize="sm"
+            picSize={12}
+            picLocation="center"
+          >
+            <Link href="/profile/1">
+              <p className="text-xs font-medium text-gray-500 cursor-pointer">
+                View profile &rarr;
+              </p>
+            </Link>
+          </Profile>
         </div>
+
+        {/* Main */}
+
         <div>
           <div className="mt-2 px-4 text-gray-700">
             <span className="text-orange-500 font-medium">Q.</span> What is the
@@ -63,26 +78,23 @@ const CommunityPostDetail: NextPage = () => {
         </div>
 
         {/* Comments */}
+
         {[1, 2, 3, 4, 5].map((_, i) => (
-          <div key={i} className="px-4 my-5 space-y-5">
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-slate-200 rounded-full cursor-pointer" />
-              <div>
-                <span className="text-sm block font-medium text-gray-700 cursor-pointer">
-                  Polar Bear
-                </span>
-                <span className="text-xs text-gray-500 block ">2시간 전</span>
-                <p className="text-gray-700 mt-2">
-                  The best mandu restaurant is the one next to my house.
-                </p>
-              </div>
-            </div>
+          <div key={i} className="px-4 py-5 space-y-5 border-b">
+            <Comment
+              nickname="Polar Bear"
+              picSize={8}
+              comment="The best mandu restaurant is the one next to my house. Chicken Fries Holiday Supermarket Kims Convenience store gogo"
+            >
+              <span className="text-xs text-gray-500 block ">2시간 전</span>
+            </Comment>
           </div>
         ))}
 
-        <div className="px-4 mb-4">
-          <Textarea placeholder="Answer this question!"></Textarea>
+        {/* Reply */}
 
+        <div className="px-4 my-3">
+          <Textarea placeholder="Answer this question!"></Textarea>
           <Button text="Reply" />
         </div>
       </div>

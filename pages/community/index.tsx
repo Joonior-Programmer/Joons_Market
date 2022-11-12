@@ -6,10 +6,10 @@ import Link from "next/link";
 const Community: NextPage = () => {
   return (
     <Layout title="Community" hasTabBar>
-      <div className="py-16 px-4 space-y-8">
+      <div className="pt-12 pb-14 px-4">
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
           <Link href="community/1">
-            <div key={i} className="flex flex-col items-start">
+            <div key={i} className="flex flex-col items-start py-2">
               <span className="flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                 동네질문
               </span>

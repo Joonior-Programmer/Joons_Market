@@ -7,7 +7,7 @@ import Textarea from "../../components/textarea";
 const Write: NextPage = () => {
   return (
     <Layout canGoBack>
-      <form className="px-4 py-12">
+      <form className="px-4 py-8">
         <Input
           inputFor="title"
           label="Title"

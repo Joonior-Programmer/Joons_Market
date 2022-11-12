@@ -12,7 +12,7 @@ const Home: NextPage = () => {
             id={i}
             key={i}
             title="IPhone 14"
-            price={1.1}
+            price={100}
             numOfComments={3}
             numOfHearts={4}
           ></Item>

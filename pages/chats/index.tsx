@@ -4,8 +4,8 @@ import Link from "next/link";
 const Chats: NextPage = () => {
   return (
     <Layout title="Chat" hasTabBar>
-      <div className="py-10 divide-y-[1px]">
-        {[1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+      <div className="pt-10 pb-16 divide-y-[1px]">
+        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
           <Link href="chats/1">
             <div
               key={i}

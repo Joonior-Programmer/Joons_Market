@@ -1,26 +1,19 @@
 import type { NextPage } from "next";
 import Layout from "../../components/layout";
 import Icon from "../../components/icon";
-import Profile from "../../components/profile";
 import Comment from "../../components/comment";
-import Link from "next/link";
+import Profile from "../../components/profile";
 
 const ProfilePage: NextPage = () => {
   return (
     <Layout title="Profile" hasTabBar>
       <div className="py-14 px-4">
+        {/* Profile */}
         <div className="flex items-center space-x-3">
-          <Profile
-            picSize={16}
-            fontType="medium"
-            textSize="base"
-            nickname="Joon"
-          >
-            <Link href="profile/edit">
-              <span className="cursor-pointer text-sm text-gray-700">
-                Edit profile &rarr;
-              </span>
-            </Link>
+          <Profile picSize={16}>
+            <div className="flex flex-col">
+              <span className="font-medium text-gray-900 text-lg">Joon</span>
+            </div>
           </Profile>
         </div>
 

@@ -2,11 +2,13 @@ import type { NextPage } from "next";
 import Button from "../../components/button";
 import Input from "../../components/input";
 import Layout from "../../components/layout";
+import Textarea from "../../components/textarea";
 
 const Upload: NextPage = () => {
   return (
     <Layout canGoBack>
-      <div className="px-4 py-10">
+      <div className="px-4 pt-14 pb-4">
+        {/* Picture Input */}
         <div>
           <label className="w-full group cursor-pointer text-gray-600 hover:text-orange-500 hover:border-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 h-48 rounded-md">
             <svg
@@ -23,23 +25,22 @@ const Upload: NextPage = () => {
                 strokeLinejoin="round"
               />
             </svg>
-
             <input className="hidden" type="file" />
           </label>
         </div>
+
+        {/* Title, Price, Descipription, Upload Button */}
+
         <div className="my-5">
           <Input label="Title" kind="text" inputFor="title" />
           <Input kind="price" label="Price" inputFor="price" />
         </div>
         <div>
-          <label className="text-sm font-medium text-gray-700">
-            Description
-          </label>
-
-          <textarea
-            rows={4}
-            className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500"
-          />
+          <Textarea
+            placeholder="Please Write the Description for the Product"
+            inputFor="description"
+            label="Description"
+          ></Textarea>
         </div>
         <Button text="Upload product" />
       </div>
