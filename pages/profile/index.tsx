@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import Layout from "../../components/layout";
-import Icon from "../../components/icon";
-import Profile from "../../components/profile";
-import Comment from "../../components/comment";
+import Layout from "@components/layout";
+import Icon from "@components/icon";
+import Profile from "@components/profile";
+import Comment from "@components/comment";
 import Link from "next/link";
 
 const ProfilePage: NextPage = () => {

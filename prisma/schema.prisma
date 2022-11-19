@@ -2,10 +2,33 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  // Foreign Key Constraint Problem Resolving
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  phone     String?  @unique
+  email     String?  @unique
+  nickname  String   @unique
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     Token?
+}
+
+model Token {
+  id      Int     @id @default(autoincrement())
+  payload String
+  phone   String? @unique
+  email   String? @unique
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int     @unique
 }

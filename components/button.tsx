@@ -1,4 +1,4 @@
-import { createClassName } from "../libs/utils";
+import { createClassName } from "@libs/utils";
 
 interface ButtonProps {
   text: string;
@@ -37,7 +37,7 @@ export default function Button({
   return (
     <button
       className={createClassName(
-        `mt-${marginTop} p-3 w-full bg-orange-500 hover:bg-orange-600 text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
+        `mt-${marginTop} p-3 w-full bg-orange-500 hover:bg-orange-600  text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
         p ? `p-${p}` : `py-${py} px-${px}`
       )}
       {...rest}

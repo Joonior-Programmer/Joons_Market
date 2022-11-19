@@ -1,13 +1,40 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { createClassName } from "../libs/utils";
-import Input from "../components/input";
-import Button from "../components/button";
+import { createClassName } from "@libs/utils";
+import urls from "@libs/urls";
+import Input from "@components/input";
+import Button from "@components/button";
+import { useForm } from "react-hook-form";
+import useMutation from "@libs/client/useMutation";
+
+interface EnterForm {
+  phone?: number;
+  email?: string;
+}
 
 const Enter: NextPage = () => {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EnterForm>();
+  const [enter, { loading, data, error }] = useMutation(
+    urls.USERS_URL + "/enter",
+    "POST"
+  );
   const [method, setMethod] = useState<"email" | "phone">("email");
-  const onEmailClick = () => setMethod("email");
-  const onPhoneClick = () => setMethod("phone");
+  const onEmailClick = () => {
+    setMethod("email"), reset();
+  };
+  const onPhoneClick = () => {
+    setMethod("phone"), reset();
+  };
+  const onValid = (enterForm: EnterForm) => {
+    enter(enterForm);
+  };
+
   return (
     <div className="mt-16 px-4">
       <h3 className="text-sm font-bold text-center">
@@ -41,7 +68,7 @@ const Enter: NextPage = () => {
             </button>
           </div>
         </div>
-        <form className="flex flex-col">
+        <form className="flex flex-col" onSubmit={handleSubmit(onValid)}>
           <div className="mt-1">
             {method === "email" ? (
               <Input
@@ -49,6 +76,7 @@ const Enter: NextPage = () => {
                 type="email"
                 label="Email"
                 kind="text"
+                register={register("email")}
                 required
               />
             ) : null}
@@ -57,6 +85,7 @@ const Enter: NextPage = () => {
                 inputFor="phone"
                 label="Phone number"
                 kind="phone"
+                register={register("phone")}
                 required
               ></Input>
             ) : null}

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { createClassName } from "../libs/utils";
+import { createClassName } from "@libs/utils";
 import { useRouter } from "next/router";
 import Icon from "./icon";
 

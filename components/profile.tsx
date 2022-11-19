@@ -1,4 +1,4 @@
-import { createClassName } from "../libs/utils";
+import { createClassName } from "@libs/utils";
 
 interface ProfileProps {
   children: React.ReactNode;
