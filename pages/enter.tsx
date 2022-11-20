@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { createClassName } from "@libs/utils";
 import urls from "@libs/urls";
@@ -6,42 +6,112 @@ import Input from "@components/input";
 import Button from "@components/button";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
+import { useRouter } from "next/router";
 
 interface EnterForm {
   phone?: number;
   email?: string;
 }
 
+interface VerificationForm {
+  verificationCode?: string;
+}
+
 const Enter: NextPage = () => {
+  const router = useRouter();
+
+  //Handling Enter Form
+
   const {
-    register,
-    watch,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    register: registerEnter,
+    watch: watchEnter,
+    handleSubmit: handleSubmitEnter,
+    reset: resetEnter,
   } = useForm<EnterForm>();
-  const [enter, { loading, data, error }] = useMutation(
-    urls.USERS_URL + "/enter",
-    "POST"
-  );
+
+  const [enter, { loading: enterLoading, data: enterData, error: enterError }] =
+    useMutation(urls.USERS_URL + "/enter", "POST");
+
+  const {
+    register: registerVerification,
+    watch: watchVerification,
+    handleSubmit: handleVerificationSubmit,
+    reset: resetVerification,
+  } = useForm<VerificationForm>();
+
+  const [
+    verify,
+    {
+      loading: verificationLoading,
+      data: verificationData,
+      error: verificationError,
+    },
+  ] = useMutation(urls.USERS_URL + "/confirm", "POST");
+
   const [method, setMethod] = useState<"email" | "phone">("email");
+
+  // Reset states when Login method is changed
+
   const onEmailClick = () => {
-    setMethod("email"), reset();
+    setMethod("email"), resetEnter();
   };
   const onPhoneClick = () => {
-    setMethod("phone"), reset();
+    setMethod("phone"), resetEnter();
   };
-  const onValid = (enterForm: EnterForm) => {
+  const onValidEnter = (enterForm: EnterForm) => {
     enter(enterForm);
   };
-
+  const onValidVerification = (verificationForm: VerificationForm) => {
+    verify(verificationForm);
+  };
+  useEffect(() => {
+    console.log(verificationData);
+    if (verificationData?.code === 0) {
+      router.push("/");
+    }
+  }, [verificationData]);
+  console.log(verificationError);
+  // console.log(verificationData);
   return (
     <div className="mt-16 px-4">
       <h3 className="text-sm font-bold text-center">
         Enter to Joon&apos;s Market
       </h3>
       <div className="mt-8">
-        <div className="flex flex-col items-center">
+        {method === "email" && enterData ? (
+          <div className="text-center">
+            <p className="text-lg font-medium">
+              Please check your email to login
+            </p>
+            <p className="font-bold text-2xl mt-2">*** Important ***</p>
+            <p className="font-medium">
+              Please Kindly check your "Spam mail" or "All Email" as well
+            </p>
+          </div>
+        ) : null}
+        {method === "phone" && enterData ? (
+          <form onSubmit={handleVerificationSubmit(onValidVerification)}>
+            <Input
+              label="Verification Code"
+              inputFor="payload"
+              kind="number"
+              register={registerVerification}
+            ></Input>
+            {verificationError ? (
+              <p className="text-center">{verificationError.message}</p>
+            ) : null}
+            <Button
+              text={verificationLoading ? "Loading" : "Verify"}
+              isDisabled={verificationLoading}
+            />
+          </form>
+        ) : null}
+        <div
+          className={createClassName(
+            "flex flex-col items-center",
+            enterData ? "hidden" : ""
+          )}
+        >
           <h5 className="text-sm text-gray-500 font-medium">Enter using:</h5>
           <div className="grid border-b w-full grid-cols-2 gap-16">
             <button
@@ -68,33 +138,46 @@ const Enter: NextPage = () => {
             </button>
           </div>
         </div>
-        <form className="flex flex-col" onSubmit={handleSubmit(onValid)}>
+        <form
+          className="flex flex-col"
+          onSubmit={handleSubmitEnter(onValidEnter)}
+        >
           <div className="mt-1">
-            {method === "email" ? (
+            {method === "email" && !enterData ? (
               <Input
                 inputFor="email"
                 type="email"
                 label="Email"
                 kind="text"
-                register={register("email")}
+                register={registerEnter}
                 required
               />
             ) : null}
-            {method === "phone" ? (
+            {method === "phone" && !enterData ? (
               <Input
                 inputFor="phone"
                 label="Phone number"
                 kind="phone"
-                register={register("phone")}
+                register={registerEnter}
                 required
-              ></Input>
+              />
             ) : null}
           </div>
 
-          {method === "email" ? <Button text="Get login link" /> : null}
-          {method === "phone" ? <Button text="Get one-time password" /> : null}
+          {method === "email" && !enterData ? (
+            <Button
+              text={enterLoading ? "Loading" : "Get login link"}
+              isDisabled={enterLoading}
+            />
+          ) : null}
+          {method === "phone" && !enterData ? (
+            <Button
+              text={enterLoading ? "Loading" : "Get one-time password"}
+              isDisabled={enterLoading}
+            />
+          ) : null}
         </form>
-        <div className="mt-8">
+        <div className={createClassName("mt-8", enterData ? "hidden" : "")}>
           <div className="relative">
             <div className="absolute w-full border-t border-gray-300" />
             <div className="relative -top-3 text-center">

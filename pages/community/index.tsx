@@ -16,7 +16,7 @@ const Community: NextPage = () => {
               <span className="mt-2 text-gray-700 cursor-pointer">
                 <span className="text-orange-500 font-medium cursor-pointer">
                   Q.
-                </span>{" "}
+                </span>
                 What is the best sushi restaurant?
               </span>
               <div className="mt-2 flex items-center justify-between w-full text-gray-500 font-medium text-xs">

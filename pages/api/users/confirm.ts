@@ -4,7 +4,8 @@ import withHandler from "@libs/server/withHandler";
 import sessionHandler from "@libs/server/sessionHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const ErrorMessage = {
+const codeMessage = {
+  0: "Success",
   1: "Verification code is not matched",
   2: "Session Expired",
   3: "No Payload is provided",
@@ -13,6 +14,11 @@ const ErrorMessage = {
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;
+  console.log(req.session)
+  // if the user already logged in
+  if (req.session.user && method === "GET") return res.redirect("/")
+
+  
   const payload =
     req.method === "POST"
       ? req.body.payload
@@ -22,15 +28,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   // session expired with "GET" method
 
-  if (!req.session.confirm || !payload && method === "GET") return res.status(400).redirect("/notification/auth-failed")
-
+  if ((!req.session.confirm || !payload) && method === "GET") {
+    console.log(req.session, payload)
+    console.log("here")
+    return res.status(406).redirect("/notification/auth-failed")
+  }
   // session expired with "POST" method
 
-  if (!req.session.confirm && method === "POST") return res.status(400).json({code: 2, message:ErrorMessage[2]})
+  if (!req.session.confirm && method === "POST") return res.status(406).json({code: 2, message:codeMessage[2]})
 
   // No payload provided
 
-  if (!payload && method === "POST") return res.status(400).json({code: 3, message:ErrorMessage[3]})
+  if (!payload && method === "POST") return res.status(406).json({code: 3, message:codeMessage[3]})
 
   const foundToken = await client.token.findFirst({
     where: {
@@ -51,7 +60,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       req.session.confirm === foundToken?.phone
     )
   ) {
-    return res.status(400).redirect("/notification/auth-failed")
+    return res.status(406).json({code:1, message: codeMessage[1]})
   }
 
   // Phone Verification Failed
@@ -60,11 +69,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     req.method === "POST" &&
     !foundToken ||
     !(
-      req.session.confirm === foundToken.email ||
-      req.session.confirm === foundToken.phone
+      req.session.confirm === foundToken?.email ||
+      req.session.confirm === foundToken?.phone
     )
   ) {
-    return res.status(400).json({code: 1, message: ErrorMessage[1]})
+    return res.status(406).json({code: 1, message: codeMessage[1]})
   }
 
 
@@ -72,19 +81,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   req.session.destroy();
 
   req.session.user = {
-    nickname: foundToken.user.nickname,
-    avatar: foundToken.user.nickname,
-    email: foundToken.user.email,
-    phone: foundToken.user.phone
+    nickname: foundToken!.user.nickname,
+    avatar: foundToken!.user.avatar,
+    email: foundToken!.user.email,
+    phone: foundToken!.user.phone
   };
 
   await req.session.save();
-
+  console.log("Session save succeeded")
   await client.token.delete({where: {
-    id: foundToken.id
+    id: foundToken!.id
   }});
-
-  return res.status(200).redirect("/");
+  
+  
+  if (method === "POST") return res.status(200).json({code:0, message: codeMessage[0]});
+  if (method === "GET") return res.redirect("/")
 }
 
 export default sessionHandler(withHandler(handler));

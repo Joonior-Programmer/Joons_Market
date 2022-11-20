@@ -6,7 +6,7 @@ import Item from "@components/item";
 const Home: NextPage = () => {
   return (
     <Layout title="Home" hasTabBar>
-      <div className="flex flex-col space-y-5 pt-14 pb-11">
+      <div className="flex flex-col space-y-5 pt-14 pb-11 relative">
         {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
           <Item
             id={i}

@@ -11,7 +11,7 @@ const ProfilePage: NextPage = () => {
       <div className="py-14 px-4">
         <div className="flex items-center space-x-3">
           <Profile
-            picSize={16}
+            picSize={14}
             fontType="medium"
             textSize="base"
             nickname="Joon"

@@ -14,12 +14,15 @@ export default function useMutation(url:string, method:string): [(data?:any) => 
         console.log(url, data)
         try {
             setLoading(true);
+            // console.log(loading)
             const response = await axios.post(url, {...data});
-            setData(response);
+            setData(response?.data);
+            // console.log(response)
             setLoading(false);
          } catch (e:any) {
-            setError(e)
-            console.log(error)
+            setError(e.response?.data)
+            setLoading(false);
+            // console.log(error?.response?.data)
          }
     }
     return [mutation , {loading, data, error}]

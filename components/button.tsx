@@ -20,6 +20,7 @@ interface ButtonProps {
     | "7xl"
     | "8xl"
     | "9xl";
+  isDisabled?: boolean;
   [key: string]: any;
 }
 
@@ -31,16 +32,18 @@ export default function Button({
   py = 2,
   px = 4,
   p,
-
+  isDisabled = false,
   ...rest
 }: ButtonProps) {
   return (
     <button
       className={createClassName(
-        `mt-${marginTop} p-3 w-full bg-orange-500 hover:bg-orange-600  text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
-        p ? `p-${p}` : `py-${py} px-${px}`
+        `mt-${marginTop} p-3 w-full text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
+        p ? `p-${p}` : `py-${py} px-${px}`,
+        isDisabled ? "bg-orange-300" : "bg-orange-500 hover:bg-orange-600"
       )}
       {...rest}
+      disabled={isDisabled}
     >
       {text}
     </button>
