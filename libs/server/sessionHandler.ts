@@ -3,12 +3,8 @@ import {withIronSessionApiRoute} from "iron-session/next"
 declare module "iron-session" { 
     interface IronSessionData { 
       confirm?: string; 
-      user?: {
-        nickname: string,
-        avatar?: string | null,
-        phone?: string | null,
-        email?: string | null,
-      }
+      user?: any;
+      social?: any
     }
   } 
 

@@ -80,12 +80,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   req.session.destroy();
 
-  req.session.user = {
-    nickname: foundToken!.user.nickname,
-    avatar: foundToken!.user.avatar,
-    email: foundToken!.user.email,
-    phone: foundToken!.user.phone
-  };
+  req.session.user = foundToken?.user;
 
   await req.session.save();
   console.log("Session save succeeded")

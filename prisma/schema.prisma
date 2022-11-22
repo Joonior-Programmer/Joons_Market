@@ -22,6 +22,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   token     Token?
+  Social    Social?
+}
+
+model Social {
+  socialId String
+  email    String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int    @unique
+
+  @@id([socialId, email])
 }
 
 model Token {

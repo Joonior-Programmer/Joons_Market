@@ -1,4 +1,4 @@
-import client from "@libs/server/prismaClient";
+import prismaClient from "@libs/server/prismaClient";
 import withHandler from "@libs/server/withHandler";
 import sessionHandler from "@libs/server/sessionHandler";
 import { createRandomString } from "@libs/utils";
@@ -15,7 +15,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const userData = email ? { email } : phone ? { phone } : undefined;
   console.log(userData)
   if(!userData) return res.status(400).end();
-  let token = await client.token.upsert({
+  let token = await prismaClient.token.upsert({
     where: { ...userData },
     create: {
       payload,
