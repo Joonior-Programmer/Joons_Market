@@ -24,6 +24,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.3",
     "twilio": "^3.83.3",
+    "twitter-api-sdk": "^1.2.1",
     "typescript": "4.8.4"
   },
   "devDependencies": {

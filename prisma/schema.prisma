@@ -27,11 +27,12 @@ model User {
 
 model Social {
   socialId String
-  email    String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int    @unique
+  email    String?
+  method   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int     @unique
 
-  @@id([socialId, email])
+  @@id([socialId, method])
 }
 
 model Token {

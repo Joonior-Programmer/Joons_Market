@@ -14,7 +14,7 @@ const codeMessage = {
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;
-  console.log(req.session)
+  // console.log(req.session)
   // if the user already logged in
   if (req.session.user && method === "GET") return res.redirect("/")
 

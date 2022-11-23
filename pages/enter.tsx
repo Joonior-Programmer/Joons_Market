@@ -193,7 +193,7 @@ const Enter: NextPage = () => {
           {/* Social Login */}
 
           <div className="grid grid-cols-2 gap-3 mt-2">
-            <Link href="aa">
+            <Link href={urls.USERS_URL + "/twitter/start"}>
               <button className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                 <svg
                   className="w-5 h-5"

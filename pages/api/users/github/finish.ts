@@ -45,14 +45,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Create or Get the user data
     const social = await prismaClient.social.upsert({
       where: {
-        socialId_email: {
+        socialId_method: {
           socialId: userData.id.toString(),
-          email: primaryEmail.email,
+          method: "github"
         },
       },
       create: {
         socialId: userData.id.toString(),
         email: primaryEmail.email,
+        method: "github",
         user: {
           create: {
             nickname: createRandomString(3),
@@ -67,15 +68,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     req.session.user = social.user;
     req.session.user.social = {
       socialId: social.socialId,
+      method: "github",
       email: social.email,
     };
 
     await req.session.save();
-
+    console.log(req.session)
     return res.redirect("/");
   } catch (e) {
     console.log(e);
     return res.status(500).json(e);
+    
   }
 }
 
