@@ -4,12 +4,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { authClient } from "@libs/server/twitterClient";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const PORT = 3001;
-
   const authUrl = authClient.generateAuthURL({
     state: process.env.TWITTER_STATE!,
     code_challenge_method: "plain",
-    code_challenge: "WEGDSG",
+    code_challenge: process.env.TWITTER_CODE_CHALLENGE!,
   });
   res.redirect(authUrl);
 }

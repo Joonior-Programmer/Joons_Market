@@ -20,6 +20,7 @@ interface ProfileProps {
     | "9xl";
   picSize?: number;
   picLocation?: "start" | "end" | "center";
+  avatar?: string | null;
 }
 
 export default function Profile({
@@ -29,10 +30,21 @@ export default function Profile({
   textSize = "sm",
   picSize = 12,
   picLocation = "center",
+  avatar = null,
 }: ProfileProps) {
   return (
     <div className={`flex py-3 items-${picLocation} space-x-3`}>
-      <div className={`w-${picSize} h-${picSize} rounded-full bg-slate-300`} />
+      {avatar ? (
+        // Image Here
+        <div
+          className={`w-${picSize} h-${picSize} rounded-full bg-slate-300`}
+        />
+      ) : (
+        <div
+          className={`w-${picSize} h-${picSize} rounded-full bg-slate-300`}
+        />
+      )}
+
       <div>
         <p className={`text-${textSize} font-${fontType} text-gray-700`}>
           {nickname}

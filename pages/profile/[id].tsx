@@ -10,7 +10,7 @@ const ProfilePage: NextPage = () => {
       <div className="py-14 px-4">
         {/* Profile */}
         <div className="flex items-center space-x-3">
-          <Profile picSize={16}>
+          <Profile picSize={12}>
             <div className="flex flex-col">
               <span className="font-medium text-gray-900 text-lg">Joon</span>
             </div>
@@ -20,7 +20,7 @@ const ProfilePage: NextPage = () => {
         {/* Icons */}
 
         <div className="mt-10 flex justify-around">
-          <Icon href="profile/sold" kind="orangeIcon" text="Sold">
+          <Icon href="/profile/sold" kind="orangeIcon" text="Sold">
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"
@@ -36,7 +36,7 @@ const ProfilePage: NextPage = () => {
               ></path>
             </svg>
           </Icon>
-          <Icon href="profile/bought" kind="orangeIcon" text="Bought">
+          <Icon href="/profile/bought" kind="orangeIcon" text="Bought">
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"
@@ -52,7 +52,7 @@ const ProfilePage: NextPage = () => {
               ></path>
             </svg>
           </Icon>
-          <Icon href="profile/favourite" kind="orangeIcon" text="Favourite">
+          <Icon href="/profile/favourite" kind="orangeIcon" text="Favourite">
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"

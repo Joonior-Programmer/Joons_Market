@@ -1,14 +1,16 @@
-import React from "react";
-import Link from "next/link";
+import React, { useEffect } from "react";
 import { createClassName } from "@libs/utils";
 import { useRouter } from "next/router";
 import Icon from "./icon";
-
+import useUser from "@libs/client/useUser";
+import Link from "next/link";
+import Button from "./button";
 interface LayoutProps {
   title?: string;
   canGoBack?: boolean;
   hasTabBar?: boolean;
   children: React.ReactNode;
+  userData?: any;
 }
 
 export default function Layout({
@@ -16,19 +18,24 @@ export default function Layout({
   canGoBack,
   hasTabBar,
   children,
+  userData = {},
 }: LayoutProps) {
   const router = useRouter();
   const goBack = () => {
     router.back();
   };
+  const { user, isLoading, isError } = userData;
+
   return (
     <div>
-      <div
+      {/* Header */}
+      {/* <div
         className={createClassName(
           "bg-white w-full max-w-lg text-lg font-medium py-4 fixed text-gray-700 border-b top-0 flex px-4 items-center",
           title ? "justify-center" : ""
         )}
-      >
+      > */}
+      <div className="bg-white z-10 w-full max-w-lg text-lg font-medium py-2 fixed text-gray-700 border-b top-0 flex px-4 items-center justify-between">
         {canGoBack ? (
           <button onClick={goBack}>
             <svg
@@ -46,12 +53,29 @@ export default function Layout({
               />
             </svg>
           </button>
-        ) : null}
-        {title ? <span>{title}</span> : null}
+        ) : (
+          <div></div>
+        )}
+
+        {title ? <span>{title}</span> : <div></div>}
+
+        {!isLoading && !user ? (
+          <Link href="/enter">
+            <Button text="Login" width="16" marginTop={0} p={0} />
+          </Link>
+        ) : (
+          <Link href="/api/users/logout">
+            <Button text="Logout" width="16" marginTop={0} p={0} />
+          </Link>
+        )}
       </div>
+
+      {/* Body */}
       <div className={createClassName("mt-4", hasTabBar ? "mb-4" : "")}>
         {children}
       </div>
+
+      {/* TabBar */}
       {hasTabBar ? (
         <nav className="bg-white max-w-lg w-full px-8 text-gray-800 border-t fixed bottom-0 py-3 flex space-x-16 items-center">
           <Icon href="/" kind="tabIcon" text="Home">

@@ -4,17 +4,20 @@ import Icon from "@components/icon";
 import Profile from "@components/profile";
 import Comment from "@components/comment";
 import Link from "next/link";
+import useUser from "@libs/client/useUser";
 
 const ProfilePage: NextPage = () => {
+  const { user, isLoading, isError } = useUser("me", true);
   return (
-    <Layout title="Profile" hasTabBar>
+    <Layout title="Profile" hasTabBar userData={{ user, isLoading, isError }}>
       <div className="py-14 px-4">
         <div className="flex items-center space-x-3">
           <Profile
             picSize={14}
             fontType="medium"
+            avatar={user?.avatar}
             textSize="base"
-            nickname="Joon"
+            nickname={user?.nickname}
           >
             <Link href="profile/edit">
               <span className="cursor-pointer text-sm text-gray-700">

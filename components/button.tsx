@@ -21,6 +21,7 @@ interface ButtonProps {
     | "8xl"
     | "9xl";
   isDisabled?: boolean;
+  width?: string;
   [key: string]: any;
 }
 
@@ -31,14 +32,15 @@ export default function Button({
   textSize = "sm",
   py = 2,
   px = 4,
-  p,
+  p = 3,
   isDisabled = false,
+  width = "full",
   ...rest
 }: ButtonProps) {
   return (
     <button
       className={createClassName(
-        `mt-${marginTop} p-3 w-full text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
+        `mt-${marginTop} p-${p} w-${width} text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
         p ? `p-${p}` : `py-${py} px-${px}`,
         isDisabled ? "bg-orange-300" : "bg-orange-500 hover:bg-orange-600"
       )}
