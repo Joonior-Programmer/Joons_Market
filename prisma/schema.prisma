@@ -22,7 +22,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   token     Token?
-  Social    Social?
+  social    Social?
+  items     Item[]
 }
 
 model Social {
@@ -42,4 +43,14 @@ model Token {
   email   String? @unique
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int     @unique
+}
+
+model Item {
+  id          Int    @id @default(autoincrement())
+  picture     String
+  title       String
+  price       Int
+  description String @db.MediumText
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
 }

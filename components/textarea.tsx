@@ -9,6 +9,7 @@ export default function Textarea({
   placeholder,
   label,
   inputFor,
+  register,
   ...rest
 }: TextareaProps) {
   return (
@@ -25,6 +26,7 @@ export default function Textarea({
         className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500"
         placeholder={placeholder}
         {...rest}
+        {...register}
       />
     </div>
   );

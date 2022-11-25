@@ -30,8 +30,8 @@ export default function Button({
   onClick,
   marginTop = 5,
   textSize = "sm",
-  py = 2,
-  px = 4,
+  py = 3,
+  px = 3,
   p = 3,
   isDisabled = false,
   width = "full",
@@ -40,8 +40,14 @@ export default function Button({
   return (
     <button
       className={createClassName(
-        `mt-${marginTop} p-${p} w-${width} text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
-        p ? `p-${p}` : `py-${py} px-${px}`,
+        `mt-${marginTop} w-${width} text-white border border-transparent rounded-md shadow-sm text-${textSize} font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none hover:font-bold transition-all`,
+        px && py
+          ? `py-${py} px-${px}`
+          : px
+          ? `px-${px}`
+          : py
+          ? `py-${py}`
+          : `p-${p}`,
         isDisabled ? "bg-orange-300" : "bg-orange-500 hover:bg-orange-600"
       )}
       {...rest}

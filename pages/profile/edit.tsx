@@ -6,6 +6,7 @@ import Profile from "@components/profile";
 import { useForm } from "react-hook-form";
 import useUser from "@libs/client/useUser";
 import { useEffect } from "react";
+
 interface ProfileEditForm {
   nickname: string;
   picture?: string;
@@ -14,21 +15,18 @@ interface ProfileEditForm {
 }
 
 const EditProfile: NextPage = () => {
-  const { user, isLoading, isError } = useUser();
+  const { user, isLoading, isError } = useUser({ isLoginRequired: true });
 
-  const { register, watch, handleSubmit, reset } = useForm<ProfileEditForm>({
-    defaultValues: {
-      nickname: user?.nickname,
-      email: user?.email && undefined,
-      phone: user?.phone && undefined,
-    },
-  });
-  // console.log(user?.nickname);
+  const { register, watch, handleSubmit, reset, setValue } =
+    useForm<ProfileEditForm>();
 
-  register("nickname", { value: "hi" });
+  useEffect(() => {
+    if (user) setValue("nickname", user.nickname);
+  }, [user]);
   console.log(watch());
+
   return (
-    <Layout canGoBack>
+    <Layout canGoBack userData={{ user, isLoading, isError }}>
       <div className="py-14 px-4 space-y-4">
         <form>
           <div className="flex items-center space-x-3">
@@ -61,8 +59,9 @@ const EditProfile: NextPage = () => {
             label="Nickname"
             type="text"
             register={register}
+            required
           />
-          {user?.email ? (
+          {/* {user?.email ? (
             <div className="space-y-1">
               <Input
                 kind="text"
@@ -70,6 +69,7 @@ const EditProfile: NextPage = () => {
                 label="Email address"
                 type="email"
                 register={register}
+                required
               />
             </div>
           ) : null}
@@ -80,9 +80,10 @@ const EditProfile: NextPage = () => {
                 label="Phone number"
                 kind="phone"
                 register={register}
+                required
               />
             </div>
-          ) : null}
+          ) : null} */}
 
           <Button text="Update Profile"></Button>
         </form>

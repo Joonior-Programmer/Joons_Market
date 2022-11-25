@@ -6,6 +6,7 @@ interface InputProps {
   inputFor: string;
   label: string;
   kind: "text" | "phone" | "price" | "number";
+  required?: boolean;
   [key: string]: any;
 }
 
@@ -14,6 +15,7 @@ export default function Input({
   label,
   kind = "text",
   register,
+  required = false,
   ...rest
 }: InputProps) {
   return (
@@ -26,7 +28,7 @@ export default function Input({
           <input
             id={inputFor}
             {...rest}
-            {...register(inputFor)}
+            {...register(inputFor, required ? { required: true } : {})}
             className="appearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:ring-1"
           />
         </div>
@@ -37,7 +39,7 @@ export default function Input({
             type="number"
             id={inputFor}
             {...rest}
-            {...register(inputFor)}
+            {...register(inputFor, required ? { required: true } : {})}
             className="appearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:ring-1"
           />
         </div>
@@ -49,10 +51,10 @@ export default function Input({
           </div>
           <input
             id={inputFor}
-            type="text"
+            type="number"
             placeholder="0"
             {...rest}
-            {...register(inputFor)}
+            {...register(inputFor, required ? { required: true } : {})}
             className="appearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
           <div className="absolute right-0 pr-3 flex items-center pointer-events-none">
@@ -71,6 +73,7 @@ export default function Input({
             className="appearance-none w-full px-3 py-2 border rounded-l-none border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
             {...rest}
             {...register(inputFor, {
+              required,
               pattern: {
                 value: /^[0-9]+$/,
                 message: "Please enter a number",

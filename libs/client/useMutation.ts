@@ -11,7 +11,6 @@ export default function useMutation(url:string, method:string): [(data?:any) => 
     const [data, setData] = useState<undefined|AxiosResponse>(undefined);
     const [error, setError] = useState<undefined|AxiosError>(undefined);
     async function mutation(data?:any){
-        console.log(url, data)
         try {
             setLoading(true);
             // console.log(loading)

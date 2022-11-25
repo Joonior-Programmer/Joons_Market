@@ -4,10 +4,24 @@ import Profile from "@components/profile";
 import Link from "next/link";
 import Button from "@components/button";
 import Content from "@components/content";
+import { useRouter } from "next/router";
+import useItem from "@libs/client/useItem";
+import useUser from "@libs/client/useUser";
 
 const ItemDetail: NextPage = () => {
+  const router = useRouter();
+  const { item, isLoading, isError } = useItem({
+    id: router?.query?.id as string,
+    idRequired: true,
+  });
+  const { user: me, isLoading: meLoading, isError: meError } = useUser({});
+  console.log(item, me);
+
   return (
-    <Layout canGoBack>
+    <Layout
+      canGoBack
+      userData={{ user: me, isLoading: meLoading, isError: meError }}
+    >
       <div className="px-4 pt-14 pb-4">
         <div className="mb-8">
           {/* Picture */}
@@ -18,13 +32,17 @@ const ItemDetail: NextPage = () => {
 
           <div className="border-b-[1px]">
             <Profile
-              nickname="Steve Jebs"
+              nickname={item?.user?.nickname}
               fontType="medium"
               picSize={12}
               picLocation="center"
               textSize="sm"
             >
-              <Link href="/profile/1">
+              <Link
+                href={`/profile/${
+                  me?.id === item?.user?.id ? "" : item?.user?.id
+                }`}
+              >
                 <p className="cursor-pointer text-xs font-medium text-gray-500">
                   View profile &rarr;
                 </p>
@@ -36,12 +54,9 @@ const ItemDetail: NextPage = () => {
 
           <div className="mt-5">
             <Content
-              title="IPhone 31"
-              price={140}
-              content="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt
-              quidem impedit quaerat dolores earum repellat numquam asperiores
-              illum, tempore aspernatur eos explicabo hic aliquam cupiditate?
-              Saepe vitae nesciunt est amet."
+              title={item?.title!}
+              price={item?.price!}
+              content={item?.description!}
             />
           </div>
         </div>
@@ -49,7 +64,14 @@ const ItemDetail: NextPage = () => {
         {/* Talk to Seller and Favourite Buttons */}
 
         <div className="flex items-center justify-between space-x-2">
-          <Button text="Talk to seller" marginTop={0} textSize="base"></Button>
+          <Button
+            text={
+              me?.id === item?.user?.id ? "It's your Item" : "Talk to seller"
+            }
+            marginTop={0}
+            textSize="base"
+            isDisabled={me?.id === item?.user?.id}
+          ></Button>
           <button className="p-2 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500">
             <svg
               className="h-6 w-6 "

@@ -14,10 +14,10 @@ const codeMessage = {
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;
-  // console.log(req.session)
+  if (!(method === "GET" || method === "POST")) return res.status(400).json({code:1, message: "Wrong Approach"})
+
   // if the user already logged in
   if (req.session.user && method === "GET") return res.redirect("/")
-
   
   const payload =
     req.method === "POST"
@@ -29,8 +29,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   // session expired with "GET" method
 
   if ((!req.session.confirm || !payload) && method === "GET") {
-    console.log(req.session, payload)
-    console.log("here")
     return res.status(406).redirect("/notification/auth-failed")
   }
   // session expired with "POST" method
@@ -60,7 +58,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       req.session.confirm === foundToken?.phone
     )
   ) {
-    return res.status(406).json({code:1, message: codeMessage[1]})
+    return res.status(406).redirect("/notification/auth-failed")
   }
 
   // Phone Verification Failed
@@ -75,8 +73,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(406).json({code: 1, message: codeMessage[1]})
   }
-
-
 
   req.session.destroy();
 
@@ -93,4 +89,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (method === "GET") return res.redirect("/")
 }
 
-export default sessionHandler(withHandler(handler));
+export default sessionHandler(withHandler({handler, methods: ["GET", "POST"]}));

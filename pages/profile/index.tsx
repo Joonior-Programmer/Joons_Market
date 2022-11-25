@@ -7,7 +7,7 @@ import Link from "next/link";
 import useUser from "@libs/client/useUser";
 
 const ProfilePage: NextPage = () => {
-  const { user, isLoading, isError } = useUser("me", true);
+  const { user, isLoading, isError } = useUser({ isLoginRequired: true });
   return (
     <Layout title="Profile" hasTabBar userData={{ user, isLoading, isError }}>
       <div className="py-14 px-4">

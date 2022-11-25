@@ -52,4 +52,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   return res.status(200).json({ code: 0 });
 }
 
-export default sessionHandler(withHandler(handler));
+export default sessionHandler(withHandler({handler, needLogout:true, methods: ["POST"]}));

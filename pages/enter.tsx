@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useUser from "@libs/client/useUser";
 
 interface EnterForm {
   phone?: number;
@@ -20,6 +21,7 @@ interface VerificationForm {
 }
 
 const Enter: NextPage = () => {
+  const { user, isLoading, isError } = useUser({ isLogoutRequired: true });
   const router = useRouter();
 
   //Handling Enter Form
@@ -38,7 +40,6 @@ const Enter: NextPage = () => {
     register: registerVerification,
     watch: watchVerification,
     handleSubmit: handleVerificationSubmit,
-    reset: resetVerification,
   } = useForm<VerificationForm>();
 
   const [
@@ -99,9 +100,9 @@ const Enter: NextPage = () => {
               inputFor="payload"
               kind="number"
               register={registerVerification}
-            ></Input>
+            />
             {verificationError ? (
-              <p className="text-center">{verificationError.message}</p>
+              <p className="text-center text-sm">{verificationError.message}</p>
             ) : null}
             <Button
               text={verificationLoading ? "Loading" : "Verify"}

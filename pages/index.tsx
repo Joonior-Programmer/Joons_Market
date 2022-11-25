@@ -3,18 +3,23 @@ import Layout from "@components/layout";
 import FloatingButton from "@components/floatingButton";
 import Item from "@components/item";
 import useUser from "@libs/client/useUser";
+import useSWR from "swr";
+import urls from "@libs/urls";
+import { ItemResponseType } from "@libs/responseTypes";
 
 const Home: NextPage = () => {
-  const { user, isLoading, isError } = useUser();
+  const { user, isLoading, isError } = useUser({});
+  const { data } = useSWR<ItemResponseType>(urls.ITEMS_URL);
+  console.log(data);
   return (
     <Layout title="Home" hasTabBar userData={{ user, isLoading, isError }}>
       <div className="flex flex-col space-y-5 pt-14 pb-11 relative">
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+        {data?.items?.map((item) => (
           <Item
-            id={i}
-            key={i}
-            title="IPhone 14"
-            price={100}
+            id={item.id}
+            key={item.id}
+            title={item.title}
+            price={item.price}
             numOfComments={3}
             numOfHearts={4}
           ></Item>

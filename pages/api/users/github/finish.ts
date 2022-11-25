@@ -41,7 +41,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const primaryEmail = emailData.filter((obj: any) => {
       return obj.primary;
     })[0];
-
+    
     // Create or Get the user data
     const social = await prismaClient.social.upsert({
       where: {
@@ -73,13 +73,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     };
 
     await req.session.save();
-    console.log(req.session)
     return res.redirect("/");
   } catch (e) {
     console.log(e);
-    return res.status(500).json(e);
+    return res.status(500).json({error: e});
     
   }
 }
 
-export default sessionHandler(withHandler(handler));
+export default sessionHandler(withHandler({handler, methods: ["GET"]}));

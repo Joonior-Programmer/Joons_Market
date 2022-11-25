@@ -4,12 +4,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { authClient } from "@libs/server/twitterClient";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+
   const authUrl = authClient.generateAuthURL({
     state: process.env.TWITTER_STATE!,
     code_challenge_method: "plain",
     code_challenge: process.env.TWITTER_CODE_CHALLENGE!,
   });
+
   res.redirect(authUrl);
 }
 
-export default sessionHandler(withHandler(handler));
+export default sessionHandler(withHandler({ handler, methods: ["GET"] }));
