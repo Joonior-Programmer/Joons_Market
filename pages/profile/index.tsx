@@ -5,11 +5,18 @@ import Profile from "@components/profile";
 import Comment from "@components/comment";
 import Link from "next/link";
 import useUser from "@libs/client/useUser";
+import useSWR from "swr";
+import urls from "@libs/urls";
+import { createClassName } from "@libs/utils";
+import { ReviewResponseType } from "@libs/responseTypes";
 
 const ProfilePage: NextPage = () => {
   const { user, isLoading, isError } = useUser({ isLoginRequired: true });
+  const { data, error } = useSWR<ReviewResponseType>(
+    urls.USERS_URL + `/me/review`
+  );
   return (
-    <Layout title="Profile" hasTabBar userData={{ user, isLoading, isError }}>
+    <Layout title="Profile" hasTabBar>
       <div className="py-14 px-4">
         <div className="flex items-center space-x-3">
           <Profile
@@ -19,7 +26,7 @@ const ProfilePage: NextPage = () => {
             textSize="base"
             nickname={user?.nickname}
           >
-            <Link href="profile/edit">
+            <Link href="/profile/edit">
               <span className="cursor-pointer text-sm text-gray-700">
                 Edit profile &rarr;
               </span>
@@ -30,7 +37,11 @@ const ProfilePage: NextPage = () => {
         {/* Icons */}
 
         <div className="mt-10 flex justify-around">
-          <Icon href="profile/sold" kind="orangeIcon" text="Sold">
+          <Icon
+            href={`/profile/record?kind=Sell&id=${user?.id}`}
+            kind="orangeIcon"
+            text="Sell"
+          >
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"
@@ -46,7 +57,11 @@ const ProfilePage: NextPage = () => {
               ></path>
             </svg>
           </Icon>
-          <Icon href="profile/bought" kind="orangeIcon" text="Bought">
+          <Icon
+            href={`/profile/record?kind=Bought&id=${user?.id}`}
+            kind="orangeIcon"
+            text="Bought"
+          >
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"
@@ -62,7 +77,11 @@ const ProfilePage: NextPage = () => {
               ></path>
             </svg>
           </Icon>
-          <Icon href="profile/favourite" kind="orangeIcon" text="Favourite">
+          <Icon
+            href={`/profile/record?kind=Favourite&id=${user?.id}`}
+            kind="orangeIcon"
+            text="Favourite"
+          >
             <svg
               className="w-6 h-6 group-hover:w-8 group-hover:h-8 transition-all"
               fill="none"
@@ -83,59 +102,32 @@ const ProfilePage: NextPage = () => {
         {/* Review */}
         <div>
           <div className="divide-y-[1px] border-t-[1px] mt-4">
-            {[1, 2, 3, 4, 5].map((_, i) => (
-              <div className="p-4">
+            {data?.reviews.map((review, i) => (
+              <div className="p-4" key={review.id}>
                 <Comment
                   picSize={12}
-                  nickname="Fish"
-                  comment="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus at veniam, aliquid architecto pariatur accusantium dolorem repudiandae optio quaerat qui dignissimos. Similique deleniti hic nisi harum. Reiciendis, debitis veritatis."
+                  nickname={review.reviewBy.nickname}
+                  comment={review.review}
+                  createdAt={review.createdAt}
                 >
                   <div className="flex items-center">
-                    <svg
-                      className="text-yellow-400 h-5 w-5 -ml-1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <svg
-                      className="text-yellow-400 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <svg
-                      className="text-yellow-400 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <svg
-                      className="text-yellow-400 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <svg
-                      className="text-gray-400 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <svg
+                        key={value}
+                        className={createClassName(
+                          "h-5 w-5 -ml-1",
+                          review.star >= value
+                            ? "text-yellow-400"
+                            : "text-gray-400"
+                        )}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
                   </div>
                 </Comment>
               </div>

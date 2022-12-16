@@ -3,7 +3,6 @@
 
 generator client {
   provider        = "prisma-client-js"
-  // Foreign Key Constraint Problem Resolving
   previewFeatures = ["referentialIntegrity"]
 }
 
@@ -14,16 +13,29 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  phone     String?  @unique
-  email     String?  @unique
-  nickname  String   @unique
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  token     Token?
-  social    Social?
-  items     Item[]
+  id               Int         @id @default(autoincrement())
+  phone            String?     @unique
+  email            String?     @unique
+  nickname         String      @unique
+  avatar           String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  token            Token?
+  social           Social?
+  items            Item[]
+  favourites       Favourite[]
+  posts            Post[]
+  comments         Comment[]
+  reviewFor        Review[]    @relation("reviewFor")
+  reviewBy         Review[]    @relation("reviewBy")
+  records          Record[]
+  streams          Stream[]
+  livechat         Livechat[]
+  chatroomsForSell Chatroom[]  @relation("chatroomsForSell")
+  chatroomsForBuy  Chatroom[]  @relation("chatroomsForBuy")
+  chat             Chat[]
+  bought           Order[]     @relation("bought")
+  sold             Order[]     @relation("sold")
 }
 
 model Social {
@@ -38,7 +50,7 @@ model Social {
 
 model Token {
   id      Int     @id @default(autoincrement())
-  payload String
+  payload String  @unique
   phone   String? @unique
   email   String? @unique
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -46,11 +58,155 @@ model Token {
 }
 
 model Item {
-  id          Int    @id @default(autoincrement())
-  picture     String
+  id          Int         @id @default(autoincrement())
+  picture     String?
   title       String
   price       Int
-  description String @db.MediumText
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String      @db.MediumText
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isSoldOut   Boolean     @default(false)
+  favourites  Favourite[]
+  record      Record[]
+  chatroom    Chatroom[]
+  order       Order?
+}
+
+model Favourite {
+  id     Int     @id @default(autoincrement())
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  item   Item?   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId Int?
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int?
+  record Record?
+
+  @@unique([userId, itemId])
+  @@unique([userId, postId])
+}
+
+model Post {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String      @db.MediumText
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  favourites  Favourite[]
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  review      String
+  reviewFor   User     @relation("reviewFor", fields: [reviewForId], references: [id], onDelete: Cascade)
+  reviewForId Int
+  reviewBy    User     @relation("reviewBy", fields: [reviewById], references: [id], onDelete: Cascade)
+  reviewById  Int
+  star        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Record {
+  id          Int        @id @default(autoincrement())
+  item        Item       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId      Int
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  kind        Kind
+  favourite   Favourite? @relation(fields: [favouriteId], references: [id], onDelete: Cascade)
+  favouriteId Int?       @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([itemId, userId, kind])
+}
+
+enum Kind {
+  Sell
+  Bought
+  Favourite
+}
+
+model Stream {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  title       String
+  price       Int
+  description String     @db.MediumText
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  livechat    Livechat[]
+  streamURL   String
+  streamKey   String
+  streamUID   String
+}
+
+model Livechat {
+  id        Int      @id @default(autoincrement())
+  message   String   @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  streamId  Int
+  userId    Int
+}
+
+model Chatroom {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  seller    User     @relation("chatroomsForSell", fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId  Int
+  buyer     User     @relation("chatroomsForBuy", fields: [buyerId], references: [id], onDelete: Cascade)
+  buyerId   Int
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId    Int
+  chats     Chat[]
+
+  @@unique([buyerId, itemId])
+}
+
+model Chat {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  message    String   @db.MediumText
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
+  chatroomId Int
+  userId     Int
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  buyer         User     @relation("bought", fields: [buyerId], references: [id], onDelete: Cascade)
+  buyerId       Int
+  seller        User     @relation("sold", fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId      Int
+  item          Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId        Int      @unique
+  price         Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  paypalOrderId String   @unique
+  payerPaypalId String
 }

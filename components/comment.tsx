@@ -1,3 +1,4 @@
+import { createTimeFormat } from "@libs/utils";
 import { useEffect, useState } from "react";
 import Profile from "./profile";
 
@@ -19,8 +20,9 @@ interface CommentProps {
     | "7xl"
     | "8xl"
     | "9xl";
-
-  children: React.ReactNode;
+  avatar?: string | null;
+  children?: React.ReactNode;
+  createdAt?: Date;
 }
 
 export default function Comment({
@@ -28,8 +30,13 @@ export default function Comment({
   nickname,
   picSize = 12,
   children,
-  nameSize = "sm",
+  nameSize = "xs",
+  avatar,
+  createdAt,
 }: CommentProps) {
+  console.log(createdAt);
+  const time = createdAt ? createTimeFormat(new Date(createdAt)) : null;
+
   return (
     <div className="flex flex-col">
       <Profile
@@ -38,8 +45,18 @@ export default function Comment({
         fontType="bold"
         picLocation="start"
         nickname={nickname}
+        avatar={avatar}
       >
-        <div className="flex items-center">{children}</div>
+        <div className="flex items-center text-xs">
+          {children
+            ? children
+            : time
+            ? new Intl.RelativeTimeFormat("en").format(
+                time.difference,
+                time.unit
+              )
+            : "A Moment Ago"}
+        </div>
       </Profile>
       <div className="text-gray-600 px-4 font-sans">
         <p>{comment}</p>

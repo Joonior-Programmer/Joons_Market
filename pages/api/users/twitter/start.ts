@@ -10,8 +10,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     code_challenge_method: "plain",
     code_challenge: process.env.TWITTER_CODE_CHALLENGE!,
   });
-
-  res.redirect(authUrl);
+  
+  return res.redirect(authUrl);
 }
 
 export default sessionHandler(withHandler({ handler, methods: ["GET"] }));

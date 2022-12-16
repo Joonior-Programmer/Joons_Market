@@ -9,16 +9,16 @@ const codeMessage = {
   1: "Verification code is not matched",
   2: "Session Expired",
   3: "No Payload is provided",
-
-}
+};
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;
-  if (!(method === "GET" || method === "POST")) return res.status(400).json({code:1, message: "Wrong Approach"})
+  if (!(method === "GET" || method === "POST"))
+    return res.status(400).json({ code: 1, message: "Wrong Approach" });
 
   // if the user already logged in
-  if (req.session.user && method === "GET") return res.redirect("/")
-  
+  if (req.session.user && method === "GET") return res.redirect("/");
+
   const payload =
     req.method === "POST"
       ? req.body.payload
@@ -27,17 +27,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       : null;
 
   // session expired with "GET" method
-
   if ((!req.session.confirm || !payload) && method === "GET") {
-    return res.status(406).redirect("/notification/auth-failed")
+    return res.status(406).redirect("/notification/auth-failed");
   }
-  // session expired with "POST" method
 
-  if (!req.session.confirm && method === "POST") return res.status(406).json({code: 2, message:codeMessage[2]})
+  // session expired with "POST" method
+  if (!req.session.confirm && method === "POST")
+    return res.status(406).json({ code: 2, message: codeMessage[2] });
 
   // No payload provided
-
-  if (!payload && method === "POST") return res.status(406).json({code: 3, message:codeMessage[3]})
+  if (!payload && method === "POST")
+    return res.status(406).json({ code: 3, message: codeMessage[3] });
 
   const foundToken = await client.token.findFirst({
     where: {
@@ -49,29 +49,31 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
 
   // Email Verification Failed
-
   if (
     req.method === "GET" &&
-    !foundToken ||
-    !(
-      req.session.confirm === foundToken?.email ||
-      req.session.confirm === foundToken?.phone
-    )
+    (!foundToken || req.session.confirm !== foundToken?.email)
   ) {
-    return res.status(406).redirect("/notification/auth-failed")
+    if (foundToken)
+      await client.token.delete({
+        where: {
+          id: foundToken.id,
+        },
+      });
+    return res.status(406).redirect("/notification/auth-failed");
   }
 
   // Phone Verification Failed
-
   if (
     req.method === "POST" &&
-    !foundToken ||
-    !(
-      req.session.confirm === foundToken?.email ||
-      req.session.confirm === foundToken?.phone
-    )
+    (!foundToken || !(req.session.confirm === foundToken?.phone))
   ) {
-    return res.status(406).json({code: 1, message: codeMessage[1]})
+    if (foundToken)
+      await client.token.delete({
+        where: {
+          id: foundToken.id,
+        },
+      });
+    return res.status(406).json({ code: 1, message: codeMessage[1] });
   }
 
   req.session.destroy();
@@ -79,14 +81,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   req.session.user = foundToken?.user;
 
   await req.session.save();
-  console.log("Session save succeeded")
-  await client.token.delete({where: {
-    id: foundToken!.id
-  }});
-  
-  
-  if (method === "POST") return res.status(200).json({code:0, message: codeMessage[0]});
-  if (method === "GET") return res.redirect("/")
+  console.log("Session save succeeded");
+  await client.token.delete({
+    where: {
+      id: foundToken!.id,
+    },
+  });
+
+  if (method === "POST")
+    return res.status(200).json({ code: 0, message: codeMessage[0] });
+  if (method === "GET") return res.redirect("/");
 }
 
-export default sessionHandler(withHandler({handler, methods: ["GET", "POST"]}));
+export default sessionHandler(
+  withHandler({ handler, methods: ["GET", "POST"] })
+);

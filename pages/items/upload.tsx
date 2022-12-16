@@ -6,39 +6,96 @@ import Textarea from "@components/textarea";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import urls from "@libs/urls";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useUser from "@libs/client/useUser";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import axios from "axios";
+import { createRandomString } from "@libs/utils";
 
 interface UploadForm {
-  picture: string;
+  picture: FileList;
   title: string;
   price: number;
   description: string;
 }
 
 const Upload: NextPage = () => {
-  const { user, isLoading, isError } = useUser({});
+  const { user, isLoading, isError } = useUser({ isLoginRequired: true });
   const router = useRouter();
+  const [imageLoading, setImageLoading] = useState(false);
   const [upload, { data, loading, error }] = useMutation(
     urls.ITEMS_URL + "/upload",
     "POST"
   );
-  console.log(urls.ITEMS_URL + "/upload");
+
   const { register, watch, handleSubmit } = useForm<UploadForm>();
-  const onValid = (uploadForm: UploadForm) => {
-    console.log(uploadForm);
-    upload(uploadForm);
+  const onValid = async (uploadForm: UploadForm) => {
+    if (loading || data || imageLoading) return;
+    if (preview && pictureFile && pictureFile.length > 0) {
+      setImageLoading(true);
+      const {
+        // Getting Direct Upload URL
+        data: {
+          uploadInfo: { id, uploadURL },
+        },
+      } = await axios.post(urls.BASE_URL + "/imageUpload", {
+        preview,
+      });
+      console.log(id, uploadURL);
+      // Create a Form for Uploading
+      const form = new FormData();
+      form.append(
+        "file",
+        pictureFile[0],
+        `${user.id}/items/${createRandomString(1)}`
+      );
+
+      // Direct Upload
+      const response = await fetch(uploadURL, {
+        method: "POST",
+        body: form,
+      });
+      console.log(response);
+      upload({ ...uploadForm, picture: id });
+      setImageLoading(false);
+    } else {
+      console.log("here");
+      upload({ ...uploadForm, picture: null });
+    }
   };
   useEffect(() => {
     if (data && data.code === 0 && data.item) {
       router.push(`/items/${data.item.id}`);
     }
   }, [data]);
+
+  const pictureFile = watch("picture");
+  const [preview, setPreview] = useState("");
+  useEffect(() => {
+    if (pictureFile && pictureFile.length > 0) {
+      const file = new Blob([pictureFile[0]], { type: "text/plain" });
+      const previewURL = URL.createObjectURL(file);
+      setPreview(previewURL);
+    }
+  }, [pictureFile]);
+  console.log(pictureFile);
   return (
-    <Layout canGoBack userData={{ user, isLoading, isError }}>
-      <div className="px-4 pt-14 h-full">
+    <Layout canGoBack>
+      <div className="px-4 pt-14 h-full mb-4">
         <form onSubmit={handleSubmit(onValid)}>
+          {preview ? (
+            <div className="relative h-80 mb-4">
+              <Image
+                fill
+                quality={100}
+                src={preview}
+                alt="Preview"
+                className="rounded-md"
+              />
+            </div>
+          ) : null}
+
           {/* Picture Input */}
           <div>
             <label className="w-full group cursor-pointer text-gray-600 hover:text-orange-500 hover:border-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 h-48 rounded-md">
@@ -56,7 +113,12 @@ const Upload: NextPage = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <input className="hidden" type="file" {...register("picture")} />
+              <input
+                className="hidden"
+                type="file"
+                {...register("picture")}
+                accept="image/*"
+              />
             </label>
           </div>
 
@@ -68,12 +130,14 @@ const Upload: NextPage = () => {
               kind="text"
               inputFor="title"
               register={register}
+              required
             />
             <Input
               kind="price"
               label="Price"
               inputFor="price"
               register={register}
+              required
             />
           </div>
           <div>
@@ -81,10 +145,14 @@ const Upload: NextPage = () => {
               placeholder="Please Write the Description for the Product"
               inputFor="description"
               label="Description"
-              register={register("description")}
+              register={register("description", { required: true })}
+              required
             ></Textarea>
           </div>
-          <Button text="Upload product" />
+          <Button
+            text={imageLoading || loading ? "Loading..." : "Upload Product"}
+            isDisabled={imageLoading ? imageLoading : loading}
+          />
         </form>
       </div>
     </Layout>

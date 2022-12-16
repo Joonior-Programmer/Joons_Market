@@ -5,12 +5,12 @@ import Icon from "./icon";
 import useUser from "@libs/client/useUser";
 import Link from "next/link";
 import Button from "./button";
+import Head from "next/head";
 interface LayoutProps {
   title?: string;
   canGoBack?: boolean;
   hasTabBar?: boolean;
   children: React.ReactNode;
-  userData?: any;
 }
 
 export default function Layout({
@@ -18,24 +18,20 @@ export default function Layout({
   canGoBack,
   hasTabBar,
   children,
-  userData = {},
 }: LayoutProps) {
   const router = useRouter();
   const goBack = () => {
     router.back();
   };
-  const { user, isLoading, isError } = userData;
-
+  const { user, isLoading, isError } = useUser({});
   return (
     <div>
+      <Head>
+        <title>{title ? `${title} | Joon's Market` : "Joon's Market"}</title>
+      </Head>
       {/* Header */}
-      {/* <div
-        className={createClassName(
-          "bg-white w-full max-w-lg text-lg font-medium py-4 fixed text-gray-700 border-b top-0 flex px-4 items-center",
-          title ? "justify-center" : ""
-        )}
-      > */}
-      <div className="bg-white z-10 w-full max-w-lg text-lg font-medium py-2 fixed text-gray-700 border-b top-0 flex px-4 items-center justify-between">
+
+      <div className="bg-white z-10 w-full max-w-lg mx-auto text-lg font-medium py-2 fixed text-gray-700 border-b top-0 flex px-4 items-center justify-between">
         {canGoBack ? (
           <button onClick={goBack}>
             <svg
@@ -61,23 +57,28 @@ export default function Layout({
 
         {!isLoading && !user ? (
           <Link href="/enter">
-            <Button text="Login" width="16" marginTop={0} p={0} />
+            <Button text="Login" width="18" marginTop={0} p={0} />
           </Link>
         ) : (
           <Link href="/api/users/logout">
-            <Button text="Logout" width="16" marginTop={0} p={0} />
+            <Button text="Logout" width="18" marginTop={0} p={0} />
           </Link>
         )}
       </div>
 
       {/* Body */}
-      <div className={createClassName("mt-4", hasTabBar ? "mb-4" : "")}>
+      <div
+        className={createClassName(
+          "mt-4 min-h-screen",
+          hasTabBar ? "mb-4" : ""
+        )}
+      >
         {children}
       </div>
 
       {/* TabBar */}
       {hasTabBar ? (
-        <nav className="bg-white max-w-lg w-full px-8 text-gray-800 border-t fixed bottom-0 py-3 flex space-x-16 items-center">
+        <nav className="bg-white w-full px-8 max-w-lg text-gray-800 border-t fixed bottom-0 py-3 flex space-x-16 items-center justify-between">
           <Icon href="/" kind="tabIcon" text="Home">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +86,7 @@ export default function Layout({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 transition-all"
             >
               <path
                 strokeLinecap="round"
@@ -110,7 +111,7 @@ export default function Layout({
               />
             </svg>
           </Icon>
-          <Icon href="/chats" kind="tabIcon" text="Chat">
+          <Icon href={user ? "/chats" : "/enter"} kind="tabIcon" text="Chat">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -141,7 +142,7 @@ export default function Layout({
               />
             </svg>
           </Icon>
-          <Icon href="/profile" kind="tabIcon" text="User">
+          <Icon href="/profile/me" kind="tabIcon" text="User">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

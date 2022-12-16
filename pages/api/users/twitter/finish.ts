@@ -17,7 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await authClient.requestAccessToken(code as string);
 
     const { data: userData } = await twitterClient.users.findMyUser();
-    
+
     const social = await prismaClient.social.upsert({
       where: {
         socialId_method: {
@@ -30,7 +30,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         method: "twitter",
         user: {
           create: {
-            nickname: createRandomString(3),
+            nickname: "user-" + createRandomString(2),
           },
         },
       },
@@ -47,9 +47,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     };
 
     await req.session.save();
-    
+
     await authClient.revokeAccessToken();
-    
+
     return res.redirect("/");
   } catch (e: any) {
     // console.log(e);
@@ -57,4 +57,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default sessionHandler(withHandler({handler, methods: ["GET"]}));
+export default sessionHandler(withHandler({ handler, methods: ["GET"] }));

@@ -1,8 +1,18 @@
-export default function ChatInput() {
+import useMutation from "@libs/client/useMutation";
+import urls from "@libs/urls";
+import { useForm } from "react-hook-form";
+
+interface ChatInputProps {
+  [key: string]: any;
+}
+
+export default function ChatInput({ register, ...rest }: ChatInputProps) {
   return (
     <div className="fixed w-full mx-auto max-w-md bottom-2 inset-x-0">
       <div className="flex relative items-center">
         <input
+          {...rest}
+          {...register("message", { required: true })}
           type="text"
           className="pr-12 shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500"
         />

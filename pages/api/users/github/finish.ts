@@ -41,13 +41,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const primaryEmail = emailData.filter((obj: any) => {
       return obj.primary;
     })[0];
-    
+
     // Create or Get the user data
     const social = await prismaClient.social.upsert({
       where: {
         socialId_method: {
           socialId: userData.id.toString(),
-          method: "github"
+          method: "github",
         },
       },
       create: {
@@ -56,7 +56,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         method: "github",
         user: {
           create: {
-            nickname: createRandomString(3),
+            nickname: "user-" + createRandomString(2),
           },
         },
       },
@@ -76,9 +76,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.redirect("/");
   } catch (e) {
     console.log(e);
-    return res.status(500).json({error: e});
-    
+    return res.status(500).json({ error: e });
   }
 }
 
-export default sessionHandler(withHandler({handler, methods: ["GET"]}));
+export default sessionHandler(withHandler({ handler, methods: ["GET"] }));

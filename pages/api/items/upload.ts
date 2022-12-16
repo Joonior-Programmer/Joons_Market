@@ -15,10 +15,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         title,
         price: +price,
         description,
-        picture: "aa",
+        picture,
         user: {
           connect: {
             id: user.id,
+          },
+        },
+        record: {
+          create: {
+            userId: user.id,
+            kind: "Sell",
           },
         },
       },
@@ -31,4 +37,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default sessionHandler(withHandler({ handler, needEnter: true, methods: ["POST"] }));
+export default sessionHandler(
+  withHandler({ handler, needEnter: true, methods: ["POST"] })
+);

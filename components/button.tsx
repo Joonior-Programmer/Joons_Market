@@ -50,6 +50,7 @@ export default function Button({
           : `p-${p}`,
         isDisabled ? "bg-orange-300" : "bg-orange-500 hover:bg-orange-600"
       )}
+      onClick={onClick}
       {...rest}
       disabled={isDisabled}
     >

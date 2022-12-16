@@ -1,4 +1,5 @@
-import { createClassName } from "@libs/utils";
+import { createImageUrl } from "@libs/utils";
+import Image from "next/image";
 
 interface ProfileProps {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ interface ProfileProps {
   picSize?: number;
   picLocation?: "start" | "end" | "center";
   avatar?: string | null;
+  preview?: string | null;
 }
 
 export default function Profile({
@@ -31,13 +33,20 @@ export default function Profile({
   picSize = 12,
   picLocation = "center",
   avatar = null,
+  preview = null,
 }: ProfileProps) {
+  avatar = preview ? preview : avatar ? createImageUrl(avatar, "avatar") : null;
   return (
     <div className={`flex py-3 items-${picLocation} space-x-3`}>
       {avatar ? (
         // Image Here
-        <div
-          className={`w-${picSize} h-${picSize} rounded-full bg-slate-300`}
+        <Image
+          src={avatar}
+          width={60}
+          height={60}
+          quality={100}
+          alt="Profile"
+          className={`w-${picSize} h-${picSize} rounded-full bg-slate-300 shadow-sm`}
         />
       ) : (
         <div

@@ -14,7 +14,6 @@ export default function Icon({ children, text, kind, href }: IconProps) {
         <Link href={href}>
           <div className="flex flex-col items-center space-y-2 cursor-pointer hover:text-orange-500 transition-all hover:font-bold">
             {children}
-
             <span>{text}</span>
           </div>
         </Link>

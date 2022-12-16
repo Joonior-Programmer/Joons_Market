@@ -11,14 +11,14 @@ interface ConfigType {
 
 export default function withHandler({
   handler,
-  needEnter,
-  needLogout,
+  needEnter = false,
+  needLogout = false,
   methods,
 }: ConfigType) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
-    if (needEnter && !req.session.user) return res.redirect("/enter");
+    if (needEnter && !req.session.user)  return res.redirect("/enter");
 
-    if (needLogout && req.session.user) return res.redirect("/");
+    if (needLogout && req.session.user)  return res.redirect("/");
 
     if (req.method && !methods.includes(req.method as method))
       return res.status(405).json({ code: 9, message: "Wrong Approach" });

@@ -13,8 +13,8 @@ export default function useMutation(url:string, method:string): [(data?:any) => 
     async function mutation(data?:any){
         try {
             setLoading(true);
-            // console.log(loading)
-            const response = await axios.post(url, {...data});
+            const response = await axios({url,method, data:{...data}}) 
+            // console.log(response)
             setData(response?.data);
             // console.log(response)
             setLoading(false);
