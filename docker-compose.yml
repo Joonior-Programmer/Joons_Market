@@ -1,8 +1,8 @@
 version: '3'
 services:
   joonsmarket: 
-    image: joonior/joonsmarket:latest
+    image: joonsmarket
   joonsmarket_nginx: 
-    image: joonior/joonsmarket_nginx:latest
+    image: joonsmarket_nginx
     ports:
       - 80:80
