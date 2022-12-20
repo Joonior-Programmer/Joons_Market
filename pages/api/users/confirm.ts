@@ -81,7 +81,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   req.session.user = foundToken?.user;
 
   await req.session.save();
-  console.log("Session save succeeded");
   await client.token.delete({
     where: {
       id: foundToken!.id,

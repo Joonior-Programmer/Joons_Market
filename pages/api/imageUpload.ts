@@ -21,7 +21,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     return res.status(200).json({ code: 0, uploadInfo: result });
   } catch (e) {
-    // console.log(e);
     return res
       .status(500)
       .json({ code: 1, message: "Internal Server Error", error: e });

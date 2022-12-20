@@ -14,12 +14,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!user)
       return res.status(401).json({ code: 1, message: "Not logged in" });
 
-    console.log(
-      `https://api.cloudflare.com/client/v4
-      /accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/stream/live_inputs`,
-      process.env.CLOUDFLARE_STREAM_API_TOKEN
-    );
-
     const {
       data: {
         result: {
@@ -45,8 +39,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    console.log(uid, url, streamKey);
-
     const stream = await prismaClient.stream.create({
       data: {
         title,
@@ -64,7 +56,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     return res.status(200).json({ code: 0, stream });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }

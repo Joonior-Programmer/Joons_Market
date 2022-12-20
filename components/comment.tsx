@@ -34,7 +34,6 @@ export default function Comment({
   avatar,
   createdAt,
 }: CommentProps) {
-  console.log(createdAt);
   const time = createdAt ? createTimeFormat(new Date(createdAt)) : null;
 
   return (

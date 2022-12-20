@@ -78,7 +78,7 @@ export default function Layout({
 
       {/* TabBar */}
       {hasTabBar ? (
-        <nav className="bg-white w-full px-8 max-w-lg text-gray-800 border-t fixed bottom-0 py-3 flex space-x-16 items-center justify-between">
+        <nav className="z-20 bg-white px-8 w-full max-w-lg text-gray-800 border-t overflow-auto fixed bottom-0 py-3 flex space-x-16 items-center justify-between">
           <Icon href="/" kind="tabIcon" text="Home">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@ export default function Layout({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 transition-all"
             >
               <path
                 strokeLinecap="round"
@@ -118,7 +118,7 @@ export default function Layout({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 transition-all"
             >
               <path
                 strokeLinecap="round"
@@ -134,7 +134,7 @@ export default function Layout({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 transition-all"
             >
               <path
                 strokeLinecap="round"
@@ -149,7 +149,7 @@ export default function Layout({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 transition-all"
             >
               <path
                 strokeLinecap="round"

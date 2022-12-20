@@ -17,12 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         id: +id!.toString(),
       },
     });
-    console.log(
-      isValid,
-      user.id,
-      isValid?.buyerId !== user.id,
-      isValid?.sellerId !== user.id
-    );
+
     if (!isValid)
       res.status(400).json({ code: 2, message: "The room not exist" });
     if (isValid?.buyerId !== user.id && isValid?.sellerId !== user.id)
@@ -59,7 +54,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({ code: 0, chats });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }

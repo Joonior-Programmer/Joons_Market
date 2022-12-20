@@ -39,7 +39,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         user: true,
       },
     });
-    // console.log(userData)
     req.session.user = social.user;
     req.session.user.social = {
       socialId: social.socialId,
@@ -52,7 +51,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.redirect("/");
   } catch (e: any) {
-    // console.log(e);
     res.status(500).json({ error: e });
   }
 }

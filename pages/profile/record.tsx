@@ -36,19 +36,23 @@ const Bought: NextPage = () => {
         <Loading />
       ) : (
         <div className="flex flex-col space-y-5 pt-14 pb-11">
-          {data?.records.map((record) => (
-            <Item
-              id={record.item.id}
-              key={record.item.id}
-              title={record.item.title}
-              price={record.item.price}
-              numOfHearts={record.item?._count?.favourites}
-              isLiked={record.item.favourites.length === 1}
-              createdAt={record.item.createdAt}
-              picture={record.item.picture}
-              isSoldOut={record.item.isSoldOut}
-            />
-          ))}
+          {data && data?.code === 0 && data?.records?.length > 0 ? (
+            data?.records?.map((record) => (
+              <Item
+                id={record.item.id}
+                key={record.item.id}
+                title={record.item.title}
+                price={record.item.price}
+                numOfHearts={record.item?._count?.favourites}
+                isLiked={record.item.favourites.length === 1}
+                createdAt={record.item.createdAt}
+                picture={record.item.picture}
+                isSoldOut={record.item.isSoldOut}
+              />
+            ))
+          ) : (
+            <p className="text-center text-lg font-medium ">No Record Exist</p>
+          )}
         </div>
       )}
     </Layout>

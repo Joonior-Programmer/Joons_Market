@@ -42,7 +42,7 @@ const Upload: NextPage = () => {
       } = await axios.post(urls.BASE_URL + "/imageUpload", {
         preview,
       });
-      console.log(id, uploadURL);
+
       // Create a Form for Uploading
       const form = new FormData();
       form.append(
@@ -56,11 +56,9 @@ const Upload: NextPage = () => {
         method: "POST",
         body: form,
       });
-      console.log(response);
       upload({ ...uploadForm, picture: id });
       setImageLoading(false);
     } else {
-      console.log("here");
       upload({ ...uploadForm, picture: null });
     }
   };
@@ -79,7 +77,6 @@ const Upload: NextPage = () => {
       setPreview(previewURL);
     }
   }, [pictureFile]);
-  console.log(pictureFile);
   return (
     <Layout canGoBack>
       <div className="px-4 pt-14 h-full mb-4">

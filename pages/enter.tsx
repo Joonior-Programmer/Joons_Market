@@ -72,7 +72,6 @@ const Enter: NextPage = () => {
     verify(verificationForm);
   };
   useEffect(() => {
-    console.log(verificationData);
     if (verificationData?.code === 0) {
       router.push("/");
     }
@@ -80,7 +79,6 @@ const Enter: NextPage = () => {
   useEffect(() => {
     if (verificationError?.code === 2) router?.push("/enter");
   }, [verificationError]);
-  console.log(errors);
   return (
     <div className="mt-16 px-4">
       <Head>

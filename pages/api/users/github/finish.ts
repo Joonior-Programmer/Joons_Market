@@ -75,7 +75,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await req.session.save();
     return res.redirect("/");
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ error: e });
   }
 }

@@ -20,16 +20,12 @@ export default function Streams({
 }: StreamProps) {
   const time = createTimeFormat(createdAt);
   avatar = avatar ? createImageUrl(avatar, "avatar") : undefined;
-  // console.log(
-  //   `https://customer-lz62w384m4nqsbd2.cloudflarestream.com/${uid}/thumbnails/thumbnail.jpg?time=1s&height=270`
-  // );
+
   const [imageError, setImageError] = useState(false);
   const handleImageError = () => {
     setImageError(true);
   };
-  console.log(
-    `https://customer-lz62w384m4nqsbd2.cloudflarestream.com/71e1e49b310f9fec75d66a6bd22413b3/thumbnails/thumbnail.jpg?height=480`
-  );
+
   return (
     <div className="relative pt-4 px-4 cursor-pointer hover:px-2 transition-all">
       <div className="relative w-full rounded-md shadow-sm aspect-video bg-slate-500">

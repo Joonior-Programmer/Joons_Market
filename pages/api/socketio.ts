@@ -13,7 +13,6 @@ export const config = {
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   // It means that socket server was already initialised
   if (res.socket.server.io) {
-    console.log("Already set up");
     res.end();
     return;
   }
@@ -30,7 +29,6 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     });
 
     socket.on("send", async ({ roomNumber, sendUser, message, kind }) => {
-      console.log(socket.id);
       // Send message to the members inside the room
       socket.to(`${kind}/${roomNumber}`).emit("receive", { sendUser, message });
       // await prismaClient.livechat.create({
@@ -44,10 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 
     socket.on("disconnect", (reason) => {
       socket.rooms.forEach((room) => socket.leave(room));
-      console.log(`${socket.id} left the room because ${reason}`);
     });
   });
-
-  console.log("Setting up socket");
   res.end();
 };

@@ -94,7 +94,7 @@ const ItemDetail: NextPage = () => {
                 <Image
                   fill
                   alt="Item Image"
-                  className="h-96"
+                  className="h-96 rounded-md"
                   quality={100}
                   src={createImageUrl(item?.picture, "public")}
                 />
@@ -171,7 +171,7 @@ const ItemDetail: NextPage = () => {
               </svg>
             </button>
           </div>
-          {me?.id !== item?.user?.id && !item?.isSoldOut ? (
+          {me && me?.id !== item?.user?.id && !item?.isSoldOut ? (
             <div className="pt-2">
               <PayPalScriptProvider options={paypalOptions}>
                 <PayPalButtons
@@ -183,8 +183,9 @@ const ItemDetail: NextPage = () => {
             </div>
           ) : null}
 
-          {item?.order?.buyerId === me?.id ||
-          item?.order?.sellerId === me?.id ? (
+          {item?.order &&
+          (item?.order?.buyerId === me?.id ||
+            item?.order?.sellerId === me?.id) ? (
             <div className="m-auto bg-slate-100 justify-center mt-4 p-6 border-4 border-orange-500 rounded-md text-sm font-medium w-80">
               <p>Buyer Name : {item?.order?.buyer?.nickname}</p>
               <p>Seller Name : {item?.order?.seller?.nickname}</p>

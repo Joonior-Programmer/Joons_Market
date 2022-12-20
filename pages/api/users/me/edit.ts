@@ -11,7 +11,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   } = req;
 
   if (!user) return res.status(200).json({ code: 2, message: "Not Logged in" });
-  console.log(avatar);
   // Check Nothing updated
   if (user.nickname === nickname && !avatar)
     return res.status(406).json({ code: 1, message: "Nothing Updated" });
@@ -27,9 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res
         .status(406)
         .json({ code: 3, message: "The nickname is already taken" });
-    console.log(
-      `https://api.cloudflare.com/client/v4/accounts//images/v2/https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${avatar}`
-    );
+
     // Delete Previous Image
     if (user.avatar && avatar) {
       const deletionResult = await axios({
@@ -57,7 +54,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({ code: 0, data: editUser });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ code: 0, message: "Internal Server Error" });
   }
 }

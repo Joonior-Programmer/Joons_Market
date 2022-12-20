@@ -13,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const favourite = await prismaClient.favourite.findUnique({
       where: {
-        userId_postId: {userId: user.id, postId: +id.toString()}
+        userId_postId: { userId: user.id, postId: +id.toString() },
       },
     });
 
@@ -25,17 +25,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           postId: +id.toString(),
         },
       });
-    } else { // If exist
+    } else {
+      // If exist
       await prismaClient.favourite.delete({
         where: {
-            userId_postId: {userId: user.id, postId: +id.toString()}
+          userId_postId: { userId: user.id, postId: +id.toString() },
         },
       });
     }
 
     return res.status(200).json({ code: 0, message: "Success" });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }

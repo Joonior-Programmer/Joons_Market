@@ -50,11 +50,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(203).json({ code: 1, message: "Records Not Found" });
     return res.status(200).json({ code: 0, records });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }
 
-export default sessionHandler(
-  withHandler({ handler, needEnter: true, methods: ["GET"] })
-);
+export default sessionHandler(withHandler({ handler, methods: ["GET"] }));

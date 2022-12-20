@@ -9,7 +9,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       body: { title, description },
       session: { user },
     } = req;
-    console.log(title, description, user)
     const post = await prismaClient.post.create({
       data: {
         title,
@@ -24,9 +23,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({ code: 0, post });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }
 
-export default sessionHandler(withHandler({ handler, needEnter: true, methods: ["POST"] }));
+export default sessionHandler(
+  withHandler({ handler, needEnter: true, methods: ["POST"] })
+);

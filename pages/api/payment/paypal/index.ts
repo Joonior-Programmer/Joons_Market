@@ -9,10 +9,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { item } = req.body;
 
     const order = await createOrder("CAD", item.price + ".00", item.title);
-    console.log(order);
     return res.status(200).json({ code: 0, id: order.id });
   } catch (e: any) {
-    console.log("ERROR" + e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }

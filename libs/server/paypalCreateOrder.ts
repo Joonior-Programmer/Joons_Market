@@ -48,10 +48,7 @@ let createOrder = async (currency: string, amount: string, title: string) => {
   });
 
   let order = await client.execute(request);
-  // console.log(`Response: ${JSON.stringify(response)}`);
-
   // If call returns body in response, you can get the deserialized version from the result attribute of the response.
-  // console.log(`Order: ${JSON.stringify(response.result)}`);
   return order.result;
 };
 export default createOrder;

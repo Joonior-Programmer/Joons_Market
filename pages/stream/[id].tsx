@@ -86,8 +86,6 @@ const StreamDetail: NextPage = () => {
   };
 
   const socketInitializer = async () => {
-    console.log("how many timees");
-
     if (socket) return;
     // We just call it because we don't need anything else out of it
     await fetch("/api/socketio");
@@ -101,7 +99,6 @@ const StreamDetail: NextPage = () => {
     });
 
     socket.on("receive", ({ sendUser, message }) => {
-      console.log(livechatData);
       setLivechatData((prev) => [
         ...prev,
         {
@@ -110,16 +107,12 @@ const StreamDetail: NextPage = () => {
           avatar: sendUser?.avatar,
         },
       ]);
-      console.log(livechatData);
     });
     if (socket) return () => socket.disconnect();
   };
 
   useEffect(() => {
-    console.log(socket);
     if (!id || socket) return;
-    console.log("run?");
-
     socketInitializer();
   }, [id]);
 
@@ -129,14 +122,10 @@ const StreamDetail: NextPage = () => {
   // Scroll to Bottom when there is a new chat
   useEffect(() => {
     if (!scrollRef) return;
-    // console.log(scrollRef.current?.focus);
     scrollRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [livechatData, scrollRef]);
-
-  // console.log(scrollRef);
-  // console.log(chatroomRef);
 
   // const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
 

@@ -30,7 +30,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     return res.status(200).json({ code: 0, posts });
   } catch (e: any) {
-    console.log(e);
     return res.status(500).json({ code: 5, message: "Internal Server Error" });
   }
 }
