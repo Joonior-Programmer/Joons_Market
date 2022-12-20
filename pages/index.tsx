@@ -8,6 +8,7 @@ import Loading from "@components/loading";
 
 const Home: NextPage = () => {
   const { items, isLoading: itemLoading, isError: itemError } = useItem({});
+  let testcommit;
   return (
     <Layout title="Home" hasTabBar>
       {itemLoading ? (
