@@ -5,7 +5,7 @@ pipeline {
         
         stage('Github_Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/Joonior-Programmer/Joons_Market'
+                git branch: 'main', url: 'https://github.com/Joonior-Programmer/Joons_Market.git'
             }
         }
         
